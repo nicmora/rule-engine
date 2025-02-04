@@ -1,6 +1,5 @@
 package com.nicmora.ruleengine.application.usecase;
 
-import com.nicmora.ruleengine.domain.model.Result;
 import com.nicmora.ruleengine.domain.model.Rule;
 import com.nicmora.ruleengine.domain.model.evaluable.Evaluable;
 import com.nicmora.ruleengine.domain.repository.RuleRepository;
@@ -8,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -16,13 +16,13 @@ public class EvaluateElement {
 
     private final RuleRepository ruleRepository;
 
-    public Result evaluateElementWithRules(Evaluable evaluable) {
-        String ruleType = evaluable.getRuleType();
-        Set<Rule> rules = new HashSet<>(ruleRepository.findByRuleType(ruleType));
+    public String evaluateElementWithRules(Evaluable evaluable) {
+        String processType = evaluable.getProcessType();
+        Set<Rule> rules = new HashSet<>(ruleRepository.findByProcessType(processType));
 
-        Rule rule = evaluable.evaluate(rules);
-
-        return rule.getResult();
+        return Optional.ofNullable(evaluable.evaluate(rules))
+                .map(Rule::getResult)
+                .orElse("Unknown");
     }
 
 }

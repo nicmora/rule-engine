@@ -5,30 +5,32 @@ import com.nicmora.ruleengine.domain.model.Rule;
 import com.nicmora.ruleengine.domain.model.evaluable.Evaluable;
 
 import java.util.Comparator;
+import java.util.Map;
 import java.util.Set;
 
 public class Evaluator {
 
-    public static Rule evaluate(Evaluable evaluable, Set<Rule> rules) {
+    public static Rule eval(Evaluable evaluable, Set<Rule> rules) {
         return rules.stream()
                 .sorted(Comparator.comparing(Rule::getPriority))
-                .filter(rule -> evaluateRule(evaluable, rule))
+                .filter(rule -> evalRule(evaluable, rule))
                 .findFirst()
                 .orElse(null);
     }
 
-    private static boolean evaluateRule(Evaluable evaluable, Rule rule) {
+    private static boolean evalRule(Evaluable evaluable, Rule rule) {
         return rule.getConditions()
                 .stream()
-                .allMatch(condition -> evaluateCondition(evaluable, condition));
+                .allMatch(condition -> evalCondition(evaluable, condition));
     }
 
-    private static boolean evaluateCondition(Evaluable evaluable, Condition condition) {
+    private static boolean evalCondition(Evaluable evaluable, Condition condition) {
         String fieldName = condition.getFieldName();
         String operator = condition.getOperator();
         String operatorValue = condition.getOperatorValue();
+        Map<String, String> fields = evaluable.getFields();
 
-        String actualValue = evaluable.getAttributeValue(fieldName);
+        String actualValue = fields.get(fieldName);
 
         if (actualValue == null) {
             return false;

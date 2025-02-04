@@ -1,9 +1,11 @@
 package com.nicmora.ruleengine.infrastructure.messaging.subscriber;
 
-import com.nicmora.ruleengine.application.messaging.subscriber.EvaluableSubscriber;
+import com.nicmora.ruleengine.domain.messaging.subscriber.EvaluableSubscriber;
+import com.nicmora.ruleengine.domain.model.evaluable.ProcessControl;
 import com.nicmora.ruleengine.domain.model.evaluable.Evaluable;
-import com.nicmora.ruleengine.domain.model.evaluable.EvaluableExample;
 import org.springframework.stereotype.Component;
+
+import java.util.Map;
 
 @Component
 public class EvaluablePubsubSubscriber implements EvaluableSubscriber {
@@ -11,10 +13,9 @@ public class EvaluablePubsubSubscriber implements EvaluableSubscriber {
     @Override
     public Evaluable retrieve() {
         // TODO: Listen to Pub/Sub
-        return EvaluableExample.builder()
-                .fieldA("A")
-                .fieldB("B")
-                .fieldC("C")
+        return ProcessControl.builder()
+                .processType("CE")
+                .fields(Map.of("fieldA", "A", "fieldB", "50", "fieldC", "10"))
                 .build();
     }
 

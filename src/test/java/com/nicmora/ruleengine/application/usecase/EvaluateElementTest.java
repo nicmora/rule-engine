@@ -1,10 +1,9 @@
 package com.nicmora.ruleengine.application.usecase;
 
 import com.nicmora.ruleengine.domain.model.Condition;
-import com.nicmora.ruleengine.domain.model.Result;
 import com.nicmora.ruleengine.domain.model.Rule;
+import com.nicmora.ruleengine.domain.model.evaluable.ProcessControl;
 import com.nicmora.ruleengine.domain.model.evaluable.Evaluable;
-import com.nicmora.ruleengine.domain.model.evaluable.EvaluableExample;
 import com.nicmora.ruleengine.domain.repository.RuleRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,9 +13,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -40,33 +40,30 @@ class EvaluateElementTest {
     @Test
     void evaluateElementWithRules() {
         // Arrange
-        when(ruleRepository.findByRuleType(evaluable.getRuleType())).thenReturn(rules);
+        when(ruleRepository.findByProcessType(evaluable.getProcessType())).thenReturn(rules);
 
         // Act
-        Result result = evaluateElement.evaluateElementWithRules(evaluable);
+        String result = evaluateElement.evaluateElementWithRules(evaluable);
 
         // Assert
-        assertEquals("OK", result.getStatus());
-        assertEquals("Rule 1 OK", result.getMessage());
+        assertEquals("OK", result);
     }
 
     Evaluable getEvaluableExample() {
-        return EvaluableExample.builder()
-                .fieldA("A")
-                .fieldB("50")
-                .fieldC("10")
-                .ruleType("CE")
+        return ProcessControl.builder()
+                .processType("CE")
+                .fields(Map.of("fieldA", "A", "fieldB", "50", "fieldC", "10"))
                 .build();
     }
 
     Rule getRuleOne() {
         return Rule.builder()
                 .id(1L)
-                .ruleType("CE")
+                .processType("CE")
                 .description("Rule 1")
                 .priority(0)
                 .conditions(Set.of(getConditionOne(), getConditionTwo(), getConditionThree()))
-                .result(getResultOne())
+                .result("OK")
                 .enabled(true)
                 .build();
     }
@@ -74,26 +71,12 @@ class EvaluateElementTest {
     Rule getRuleTwo() {
         return Rule.builder()
                 .id(1L)
-                .ruleType("CE")
+                .processType("CE")
                 .description("Rule 2")
                 .priority(1)
                 .conditions(Set.of(getConditionFour()))
-                .result(getResultTwo())
+                .result("NOK")
                 .enabled(true)
-                .build();
-    }
-
-    Result getResultOne() {
-        return Result.builder()
-                .status("OK")
-                .message("Rule 1 OK")
-                .build();
-    }
-
-    Result getResultTwo() {
-        return Result.builder()
-                .status("NOK")
-                .message("Rule 2 NOK")
                 .build();
     }
 

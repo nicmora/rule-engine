@@ -17,8 +17,8 @@ public class Rule {
     private String description;
     private Integer priority;
     private Set<Condition> conditions;
-    private String ruleType;
-    private Result result;
+    private String processType;
+    private String result;
     private Boolean enabled;
 
 }

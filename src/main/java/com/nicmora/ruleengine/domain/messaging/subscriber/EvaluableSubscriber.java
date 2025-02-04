@@ -1,4 +1,4 @@
-package com.nicmora.ruleengine.application.messaging.subscriber;
+package com.nicmora.ruleengine.domain.messaging.subscriber;
 
 import com.nicmora.ruleengine.domain.model.evaluable.Evaluable;
 

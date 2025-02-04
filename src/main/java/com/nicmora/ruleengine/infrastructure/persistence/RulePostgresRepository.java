@@ -1,4 +1,4 @@
-package com.nicmora.ruleengine.infrastructure.persistence.adapter;
+package com.nicmora.ruleengine.infrastructure.persistence;
 
 import com.nicmora.ruleengine.domain.model.Rule;
 import com.nicmora.ruleengine.domain.repository.RuleRepository;
@@ -11,7 +11,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class RuleRepositoryAdapter implements RuleRepository {
+public class RulePostgresRepository implements RuleRepository {
 
     private final RuleJpaRepository ruleJpaRepository;
     private final RulePersistenceMapper rulePersistenceMapper;
@@ -25,8 +25,8 @@ public class RuleRepositoryAdapter implements RuleRepository {
     }
 
     @Override
-    public List<Rule> findByRuleType(String ruleType) {
-        return ruleJpaRepository.findByRuleType(ruleType)
+    public List<Rule> findByProcessType(String processType) {
+        return ruleJpaRepository.findByRuleType(processType)
                 .stream()
                 .map(rulePersistenceMapper::toModel)
                 .toList();

@@ -7,6 +7,6 @@ import java.util.List;
 public interface RuleRepository {
 
     List<Rule> findAll();
-    List<Rule> findByRuleType(String ruleType);
+    List<Rule> findByProcessType(String processType);
 
 }
