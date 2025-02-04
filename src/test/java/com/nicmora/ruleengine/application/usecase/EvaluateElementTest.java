@@ -76,7 +76,7 @@ class EvaluateElementTest {
                 .id(1L)
                 .ruleType("CE")
                 .description("Rule 2")
-                .priority(0)
+                .priority(1)
                 .conditions(Set.of(getConditionFour()))
                 .result(getResultTwo())
                 .enabled(true)
